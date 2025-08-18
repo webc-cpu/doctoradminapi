@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ar">
+  <head>
+    <meta charset="UTF-8">
+    <title>تحميل تقرير المريض</title>
+  </head>
+  <body>
+    <form id="pdfForm" method="POST" action="../exports/generate_pdf_patient.php" target="_self">
+      <input type="hidden" name="patient_id" id="patient_id" value="">
+    </form>
+    <script>
+      // جلب patient_id من الرابط
+      const urlParams = new URLSearchParams(window.location.search);
+      const pid = urlParams.get('pid');
+      document.getElementById('patient_id').value = pid;
+      document.getElementById('pdfForm').submit();
+    </script>
+    <p style="text-align:center;">جاري تحميل التقرير...</p>
+  </body>
+</html>

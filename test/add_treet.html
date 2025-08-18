@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>رفع صور العلاج</title>
+</head>
+<body>
+
+    <h2>📷 رفع صور لعلاج</h2>
+
+    <form action="http://we-bc.atwebpages.com/doctoradminapi/treatment/imeg_treatment/add" method="post" enctype="multipart/form-data">
+        
+        <label for="treatment_id">رقم العلاج:</label><br>
+        <input type="number" name="treatment_id" id="treatment_id" required><br><br>
+
+        <label for="images">اختر الصور (يمكنك اختيار أكثر من صورة):</label><br>
+        <input type="file" name="images[]" id="images" accept="image/*" multiple required><br><br>
+
+        <button type="submit">📤 رفع الصور</button>
+
+    </form>
+
+</body>
+</html>

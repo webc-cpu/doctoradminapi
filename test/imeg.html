@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8" />
+<title>عرض صور العلاج</title>
+<style>
+  body { direction: rtl; font-family: Tahoma, sans-serif; padding: 20px; }
+  input, button { padding: 10px; font-size: 16px; }
+  .image-container { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 15px; }
+  .image-box img { max-width: 200px; border: 1px solid #ccc; border-radius: 5px; }
+</style>
+</head>
+<body>
+
+<h2>عرض صور العلاج</h2>
+
+<label>رقم العلاج (treatment_id): </label>
+<input type="number" id="treatmentId" />
+<button id="loadBtn">تحميل الصور</button>
+
+<div class="image-container" id="imagesContainer"></div>
+
+<script>
+async function fetchImageBase64(imageName) {
+  try {
+    const res = await fetch('http://we-bc.atwebpages.com/doctoradminapi/get_image.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ img: imageName })
+    });
+    const data = await res.json();
+    if (data.status === 'success') {
+      return `data:${data.mime};base64,${data.base64}`;
+    } else {
+      console.error('Failed to load image:', imageName, data.message);
+      return null;
+    }
+  } catch (e) {
+    console.error('Error fetching image:', imageName, e);
+    return null;
+  }
+}
+
+document.getElementById('loadBtn').onclick = async () => {
+  const treatmentId = document.getElementById('treatmentId').value.trim();
+  const container = document.getElementById('imagesContainer');
+  container.innerHTML = 'جارٍ تحميل الصور...';
+
+  if (!treatmentId) {
+    alert('يرجى إدخال رقم العلاج');
+    container.innerHTML = '';
+    return;
+  }
+
+  try {
+    const res = await fetch('http://we-bc.atwebpages.com/doctoradminapi/treatment/imeg_treatment/view', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ treatment_id: treatmentId })
+    });
+    const json = await res.json();
+
+    if (json.status !== 'success') {
+      container.innerHTML = `<p style="color:red;">${json.message || 'فشل تحميل الصور'}</p>`;
+      return;
+    }
+
+    const images = json.images;
+    if (!images || images.length === 0) {
+      container.innerHTML = '<p>لا توجد صور لهذا العلاج.</p>';
+      return;
+    }
+
+    container.innerHTML = '';
+    for (const img of images) {
+      // استخراج اسم الصورة من URL بشكل أكثر أماناً
+      const urlParams = new URLSearchParams(img.url.split('?')[1]);
+      const imgName = urlParams.get('img');
+
+      if (!imgName) {
+        console.warn('اسم الصورة غير موجود في الرابط:', img.url);
+        continue;
+      }
+
+      const imgDataUrl = await fetchImageBase64(imgName);
+      if (imgDataUrl) {
+        const imgEl = document.createElement('img');
+        imgEl.src = imgDataUrl;
+        container.appendChild(imgEl);
+      } else {
+        const errMsg = document.createElement('p');
+        errMsg.textContent = `فشل تحميل الصورة: ${imgName}`;
+        errMsg.style.color = 'red';
+        container.appendChild(errMsg);
+      }
+    }
+  } catch (e) {
+    container.innerHTML = '<p style="color:red;">حدث خطأ أثناء تحميل الصور.</p>';
+    console.error(e);
+  }
+};
+
+</script>
+
+</body>
+</html>
+
+
+<!-- رابط الدردشة مع شات لعرض الصور في فلاتر -->
+<!-- https://chatgpt.com/share/6869a386-6760-8004-a8d2-1858c928ca12 -->
+
+
+<!-- برونت جاهز لكروسس ليعرض الصور بفلاتر -->
+<!-- 
+
+You are a Flutter expert AI assistant called "Courses". Your job is to write Flutter code snippets or full widgets based on the user's requests.
+
+Rules:
+
+- Always write clean, idiomatic Flutter code using Dart.
+- Use null safety and best practices.
+- When the user asks for API calls, always use the http package with proper error handling.
+- If the user asks to display images from base64 or network, provide working examples with widgets.
+- Provide short explanations only if requested.
+- Never write code unrelated to Flutter or Dart.
+- When asked for UI, create responsive widgets with clear structure.
+- If the user provides an API endpoint, use it directly.
+- If the user wants state management, ask for preferred method or use simple setState if not specified.
+- Always return only the Flutter code, no extra text unless asked.
+
+APIs you must use:
+
+- To get treatment images info (list of images with IDs and URLs):  
+  POST http://we-bc.atwebpages.com/doctoradminapi/treatment/imeg_treatment/view  
+  Request body JSON: { "treatment_id": treatmentId }
+
+- To get image data as base64:  
+  POST http://we-bc.atwebpages.com/doctoradminapi/get_image.php  
+  Request body JSON: { "img": imageFileName }
+
+Example usage:
+
+User: "Write Flutter code to fetch images from the API and display them in a grid."
+
+Courses AI:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+class ImagesGrid extends StatefulWidget {
+  @override
+  _ImagesGridState createState() => _ImagesGridState();
+}
+
+class _ImagesGridState extends State<ImagesGrid> {
+  // Your code here...
+}
+ -->

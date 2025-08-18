@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>تعديل العلاج</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; direction: rtl; padding: 20px; }
+        label { display: block; margin-top: 10px; }
+        input, textarea, select { width: 100%; padding: 8px; margin-top: 5px; }
+        .images-preview img { height: 100px; margin: 5px; cursor: pointer; border-radius: 6px; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+    <h2>تعديل بيانات العلاج</h2>
+
+    <form id="searchForm">
+        <label>أدخل معرف العلاج:</label>
+        <input type="text" id="treatmentId" required>
+        <button type="submit">جلب البيانات</button>
+    </form>
+
+    <form id="editForm" enctype="multipart/form-data" style="display:none">
+        <input type="hidden" name="treatment_id" id="treatment_id">
+
+        <label>اسم العلاج:</label>
+        <input type="text" name="treatment_name" id="treatment_name">
+
+        <label>بطاقة العلاج:</label>
+        <input type="text" name="treatment_card" id="treatment_card">
+
+        <label>رقم العلاج:</label>
+        <input type="text" name="treatment_number" id="treatment_number">
+
+        <label>تاريخ العلاج:</label>
+        <input type="date" name="treatment_date" id="treatment_date">
+
+        <label>الدفعة:</label>
+        <input type="number" name="treatment_payment" id="treatment_payment">
+
+        <label>إجمالي الواجب:</label>
+        <input type="number" name="treatment_total" id="treatment_total">
+
+        <label>ملاحظة:</label>
+        <textarea name="treatment_note" id="treatment_note"></textarea>
+
+        <label>هل العلاج منتهي؟</label>
+        <select name="is_finished" id="is_finished">
+            <option value="0">لا</option>
+            <option value="1">نعم</option>
+        </select>
+
+        <label>رفع صور جديدة:</label>
+        <input type="file" name="images[]" id="images" multiple>
+
+        <div class="images-preview" id="existingImages"></div>
+
+        <button type="submit">تحديث</button>
+    </form>
+
+    <script>
+        const IMG_API_URL = "http://we-bc.atwebpages.com/doctoradminapi/get_image.php";
+
+        // دالة لجلب صورة base64 عبر POST
+        async function fetchImageBase64(imgUrl) {
+            try {
+                const urlParams = new URL(imgUrl);
+                const imgName = urlParams.searchParams.get('img');
+                if (!imgName) return null;
+
+                const response = await fetch(IMG_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ img: imgName })
+                });
+                const data = await response.json();
+                if (data.status === 'success') {
+                    return `data:${data.mime};base64,${data.base64}`;
+                }
+            } catch (err) {
+                console.error('فشل تحميل الصورة:', err);
+            }
+            return null;
+        }
+
+        document.getElementById("searchForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const id = document.getElementById("treatmentId").value;
+
+            fetch("http://we-bc.atwebpages.com/doctoradminapi/treatment/view.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `treatment_id=${encodeURIComponent(id)}`
+            })
+            .then(res => res.json())
+            .then(async data => {
+                if (data.status === "success") {
+                    const t = data.data;
+                    document.getElementById("editForm").style.display = "block";
+                    document.getElementById("treatment_id").value = id;
+                    document.getElementById("treatment_name").value = t.treatment_name;
+                    document.getElementById("treatment_card").value = t.treatment_card;
+                    document.getElementById("treatment_number").value = t.treatment_number;
+                    document.getElementById("treatment_date").value = t.treatment_date;
+                    document.getElementById("treatment_payment").value = t.treatment_payment;
+                    document.getElementById("treatment_total").value = t.treatment_total;
+                    document.getElementById("treatment_note").value = t.treatment_note;
+                    document.getElementById("is_finished").value = t.is_finished;
+
+                    const imgBox = document.getElementById("existingImages");
+                    imgBox.innerHTML = "";
+
+                    // جلب وعرض الصور بصيغة base64
+                    for (const img of t.images) {
+                        const base64Src = await fetchImageBase64(img.url);
+                        if (base64Src) {
+                            const i = document.createElement("img");
+                            i.src = base64Src;
+                            i.title = "اضغط للحذف";
+                            i.dataset.id = img.id;
+                            i.onclick = () => {
+                                i.remove();
+                                const hidden = document.createElement("input");
+                                hidden.type = "hidden";
+                                hidden.name = "delete_image_ids[]";
+                                hidden.value = img.id;
+                                document.getElementById("editForm").appendChild(hidden);
+                            };
+                            imgBox.appendChild(i);
+                        } else {
+                            // لو فشلت تحميل الصورة ممكن تعرض رسالة أو تضع صورة بديلة
+                            const p = document.createElement("p");
+                            p.textContent = "فشل تحميل صورة.";
+                            imgBox.appendChild(p);
+                        }
+                    }
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(err => {
+                alert("خطأ في الاتصال بالخادم");
+                console.error(err);
+            });
+        });
+
+        document.getElementById("editForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            fetch("http://we-bc.atwebpages.com/doctoradminapi/treatment/edit.php", {
+                method: "POST",
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => alert(data.message))
+            .catch(err => {
+                alert("حدث خطأ أثناء التحديث");
+                console.error(err);
+            });
+        });
+    </script>
+</body>
+</html>

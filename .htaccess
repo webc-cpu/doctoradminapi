@@ -1,0 +1,23 @@
+RewriteEngine On
+RewriteBase /doctoradminapi/
+
+# ✅ هاد السطر مهم لتمرير Authorization header لـ PHP
+SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+
+# السماح بتمرير get-image.php مباشرة
+RewriteCond %{REQUEST_URI} ^/doctoradminapi/get_image\.php$ [NC]
+RewriteRule ^ - [L]
+
+# إعادة كتابة كل الطلبات غير الموجودة لملف index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+
+# منع الوصول المباشر لبعض ملفات النظام الحساسة
+<FilesMatch "^(check_api_key|config|connect|router|cron_update_status|functions)\.php$">
+    Require all denied
+</FilesMatch>
+
+RewriteEngine On
+RewriteCond %{HTTP:Authorization} ^(.*)
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%1]

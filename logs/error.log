@@ -1,0 +1,35 @@
+[04-Aug-2025 16:23:15 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`4643368_webc`.`expenses`, CONSTRAINT `expenses_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)) in /srv/disk18/4643368/www/we-bc.atwebpages.com/doctoradminapi/app/center/users/delete.php:56
+Stack trace:
+#0 /srv/disk18/4643368/www/we-bc.atwebpages.com/doctoradminapi/app/center/users/delete.php(56): PDOStatement->execute(Array)
+#1 /srv/disk18/4643368/www/we-bc.atwebpages.com/doctoradminapi/router.php(163): require('/srv/disk18/464...')
+#2 /srv/disk18/4643368/www/we-bc.atwebpages.com/doctoradminapi/index.php(20): require_once('/srv/disk18/464...')
+#3 {main}
+  thrown in /srv/disk18/4643368/www/we-bc.atwebpages.com/doctoradminapi/app/center/users/delete.php on line 56
+[04-Aug-2025 16:23:20 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`4643368_webc`.`expenses`, CONSTRAINT `expenses_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)) in /srv/disk18/4643368/www/we-bc.atwebpages.com/doctoradminapi/app/center/users/delete.php:56
+Stack trace:
+#0 /srv/disk18/4643368/www/we-bc.atwebpages.com/doctoradminapi/app/center/users/delete.php(56): PDOStatement->execute(Array)
+#1 /srv/disk18/4643368/www/we-bc.atwebpages.com/doctoradminapi/router.php(163): require('/srv/disk18/464...')
+#2 /srv/disk18/4643368/www/we-bc.atwebpages.com/doctoradminapi/index.php(20): require_once('/srv/disk18/464...')
+#3 {main}
+  thrown in /srv/disk18/4643368/www/we-bc.atwebpages.com/doctoradminapi/app/center/users/delete.php on line 56
+[04-Aug-2025 18:51:59 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`4643368_webc`.`expenses`, CONSTRAINT `expenses_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)) in /srv/disk18/4643368/www/we-bc.atwebpages.com/doctoradminapi/app/center/users/delete.php:56
+Stack trace:
+#0 /srv/disk18/4643368/www/we-bc.atwebpages.com/doctoradminapi/app/center/users/delete.php(56): PDOStatement->execute(Array)
+#1 /srv/disk18/4643368/www/we-bc.atwebpages.com/doctoradminapi/router.php(163): require('/srv/disk18/464...')
+#2 /srv/disk18/4643368/www/we-bc.atwebpages.com/doctoradminapi/index.php(20): require_once('/srv/disk18/464...')
+#3 {main}
+  thrown in /srv/disk18/4643368/www/we-bc.atwebpages.com/doctoradminapi/app/center/users/delete.php on line 56
+[04-Aug-2025 18:52:42 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`4643368_webc`.`appointments`, CONSTRAINT `1` FOREIGN KEY (`secretary_id`) REFERENCES `secretaries` (`secretary_id`)) in /srv/disk18/4643368/www/we-bc.atwebpages.com/doctoradminapi/app/center/secretary/delete.php:14
+Stack trace:
+#0 /srv/disk18/4643368/www/we-bc.atwebpages.com/doctoradminapi/app/center/secretary/delete.php(14): PDOStatement->execute(Array)
+#1 /srv/disk18/4643368/www/we-bc.atwebpages.com/doctoradminapi/router.php(163): require('/srv/disk18/464...')
+#2 /srv/disk18/4643368/www/we-bc.atwebpages.com/doctoradminapi/index.php(20): require_once('/srv/disk18/464...')
+#3 {main}
+  thrown in /srv/disk18/4643368/www/we-bc.atwebpages.com/doctoradminapi/app/center/secretary/delete.php on line 14
+[04-Aug-2025 18:54:51 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`4643368_webc`.`expenses`, CONSTRAINT `expenses_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)) in /srv/disk18/4643368/www/we-bc.atwebpages.com/doctoradminapi/app/center/users/delete.php:56
+Stack trace:
+#0 /srv/disk18/4643368/www/we-bc.atwebpages.com/doctoradminapi/app/center/users/delete.php(56): PDOStatement->execute(Array)
+#1 /srv/disk18/4643368/www/we-bc.atwebpages.com/doctoradminapi/router.php(163): require('/srv/disk18/464...')
+#2 /srv/disk18/4643368/www/we-bc.atwebpages.com/doctoradminapi/index.php(20): require_once('/srv/disk18/464...')
+#3 {main}
+  thrown in /srv/disk18/4643368/www/we-bc.atwebpages.com/doctoradminapi/app/center/users/delete.php on line 56
